@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zking.mapper.IUserMapper">
+    <sql id="query" >
+        select * from USER
+    </sql>
+   <select id="findOnly" resultType="user" parameterType="user">
+     select * from USER
+      <where>
+         <if test="uname!=null">
+            and  uname =#{uname}
+         </if>
+      </where>
+   </select>
+    <select id="findOnAll" resultType="user" parameterType="java.util.List">
+        select * from USER
+        <where>
+            <if test="list.size()>0">
+                <foreach collection="list" item="s" open="uid in (" close=")" separator=",">
+                    #{s}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="findAll" resultType="user" parameterType="java.util.Map">
+        <include refid="query"></include> limit #{start},#{end}
+    </select>
+    <update id="edit" parameterType="user">
+        UPDATE user
+        <set>
+            <if test="uname!=null">
+                 uname =#{uname},
+            </if>
+        </set>
+        <where>
+                and uid =#{uid}
+        </where>
+    </update>
+</mapper>
